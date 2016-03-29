@@ -63,7 +63,7 @@ public class StreamTools {
 	}
 	
 	public static CompoundTag read(DataInput input, SizeTracker tracker) throws IOException{
-		Tag tag = things(input, 0, tracker);
+		Tag tag = read(input, 0, tracker);
 		if(tag instanceof CompoundTag){
 			return (CompoundTag)tag;
 		}
@@ -84,7 +84,7 @@ public class StreamTools {
 		}
 	}
 	
-	private static Tag things(DataInput input, int a, SizeTracker tracker) throws IOException{
+	private static Tag read(DataInput input, int a, SizeTracker tracker) throws IOException{
 		byte b = input.readByte();
 		tracker.read(8);
 		if(b == 0){
