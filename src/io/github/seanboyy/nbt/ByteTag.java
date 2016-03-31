@@ -1,50 +1,52 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class IntTag extends Tag {
+public class ByteTag extends Tag {
 
-	private int data;
+	private byte data;
 	
-	IntTag(){}
+	ByteTag(){}
 	
-	public IntTag(int data){
+	public ByteTag(byte data){
 		this.data = data;
 	}
 	
 	void write(DataOutput output) throws IOException {
-		output.writeInt(this.data);
+		output.writeByte(this.data);
 	}
+
 
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
-		tracker.read(96L);
-		this.data = input.readInt();
+		tracker.read(72L);
+		this.data = input.readByte();
 	}
 
+
 	public String toString() {
-		return "" + this.data;
+		return "" + this.data + "b";
 	}
 
 	public byte getId() {
-		return (byte)3;
+		return (byte)1;
 	}
 
 	public Tag copy() {
-		return new IntTag(this.data);
+		return new ByteTag(this.data);
 	}
-	
+
 	public boolean equals(Object obj){
 		if(super.equals(obj)){
-			IntTag intTag = (IntTag)obj;
-			return this.data == intTag.data;
+			ByteTag byteTag = (ByteTag)obj;
+			return this.data == byteTag.data;
 		}
 		else{
 			return false;
 		}
 	}
-
+	
 	public int hashCode(){
 		return super.hashCode() ^ this.data;
 	}
@@ -58,11 +60,11 @@ public class IntTag extends Tag {
 	}
 	
 	public short getShort(){
-		return (short)(this.data & 65535);
+		return (short)this.data;
 	}
 	
 	public byte getByte(){
-		return (byte)(this.data & 255);
+		return this.data;
 	}
 	
 	public double getDouble(){

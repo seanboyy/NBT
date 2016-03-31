@@ -1,4 +1,4 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;

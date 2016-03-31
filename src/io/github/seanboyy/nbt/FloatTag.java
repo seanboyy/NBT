@@ -1,44 +1,44 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class DoubleTag extends Tag {
+public class FloatTag extends Tag {
 
-	private double data;
+	private float data;
 	
-	DoubleTag(){}
+	FloatTag(){}
 	
-	public DoubleTag(double data){
+	public FloatTag(float data){
 		this.data = data;
 	}
 	
 	void write(DataOutput output) throws IOException {
-		output.writeDouble(this.data);
+		output.writeFloat(this.data);
 	}
 
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
-		tracker.read(128L);
-		this.data = input.readDouble();
+		tracker.read(96L);
+		this.data = input.readFloat();
 	}
 
 	public String toString() {
-		return "" + this.data + "d";
+		return "" + this.data + "f";
 	}
 
 	public byte getId() {
-		return (byte)6;
+		return (byte)5;
 	}
 
 	public Tag copy() {
-		return new DoubleTag(this.data);
+		return new FloatTag(this.data);
 	}
-	
+
 	public boolean equals(Object obj){
 		if(super.equals(obj)){
-			DoubleTag doubleTag = (DoubleTag)obj;
-			return this.data == doubleTag.data;
+			FloatTag floatTag = (FloatTag)obj;
+			return this.data == floatTag.data;
 		}
 		else{
 			return false;
@@ -46,12 +46,11 @@ public class DoubleTag extends Tag {
 	}
 	
 	public int hashCode(){
-		long a = Double.doubleToLongBits(this.data);
-		return super.hashCode() ^ (int)(a ^ a >>> 32);
+		return super.hashCode() ^ Float.floatToIntBits(this.data);
 	}
 	
 	public long getLong(){
-		return (long)Math.floor(this.data);
+		return (long)this.data;
 	}
 	
 	public int getInt(){
@@ -59,18 +58,18 @@ public class DoubleTag extends Tag {
 	}
 	
 	public short getShort(){
-		return (short)Math.floor(this.data);
+		return (short)((int)Math.floor(this.data) & 65535);
 	}
 	
 	public byte getByte(){
-		return (byte)Math.floor(this.data);
+		return (byte)((int)Math.floor(this.data) & 255);
 	}
 	
 	public double getDouble(){
-		return this.data;
+		return (double)this.data;
 	}
 	
 	public float getFloat(){
-		return (float)this.data;
+		return this.data;
 	}
 }

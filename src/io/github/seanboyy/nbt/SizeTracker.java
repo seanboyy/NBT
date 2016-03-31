@@ -1,4 +1,4 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 public class SizeTracker {
 	public static final SizeTracker INFINITE = new SizeTracker(0L){

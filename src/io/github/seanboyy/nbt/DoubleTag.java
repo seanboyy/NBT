@@ -1,46 +1,44 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class ByteTag extends Tag {
+public class DoubleTag extends Tag {
 
-	private byte data;
+	private double data;
 	
-	ByteTag(){}
+	DoubleTag(){}
 	
-	public ByteTag(byte data){
+	public DoubleTag(double data){
 		this.data = data;
 	}
 	
 	void write(DataOutput output) throws IOException {
-		output.writeByte(this.data);
+		output.writeDouble(this.data);
 	}
-
 
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
-		tracker.read(72L);
-		this.data = input.readByte();
+		tracker.read(128L);
+		this.data = input.readDouble();
 	}
 
-
 	public String toString() {
-		return "" + this.data + "b";
+		return "" + this.data + "d";
 	}
 
 	public byte getId() {
-		return (byte)1;
+		return (byte)6;
 	}
 
 	public Tag copy() {
-		return new ByteTag(this.data);
+		return new DoubleTag(this.data);
 	}
-
+	
 	public boolean equals(Object obj){
 		if(super.equals(obj)){
-			ByteTag byteTag = (ByteTag)obj;
-			return this.data == byteTag.data;
+			DoubleTag doubleTag = (DoubleTag)obj;
+			return this.data == doubleTag.data;
 		}
 		else{
 			return false;
@@ -48,27 +46,28 @@ public class ByteTag extends Tag {
 	}
 	
 	public int hashCode(){
-		return super.hashCode() ^ this.data;
+		long a = Double.doubleToLongBits(this.data);
+		return super.hashCode() ^ (int)(a ^ a >>> 32);
 	}
 	
 	public long getLong(){
-		return (long)this.data;
+		return (long)Math.floor(this.data);
 	}
 	
 	public int getInt(){
-		return this.data;
+		return (int)Math.floor(this.data);
 	}
 	
 	public short getShort(){
-		return (short)this.data;
+		return (short)Math.floor(this.data);
 	}
 	
 	public byte getByte(){
-		return this.data;
+		return (byte)Math.floor(this.data);
 	}
 	
 	public double getDouble(){
-		return (double)this.data;
+		return this.data;
 	}
 	
 	public float getFloat(){

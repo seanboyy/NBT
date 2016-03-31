@@ -1,4 +1,4 @@
-package org.seanb.nbt;
+package io.github.seanboyy.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -15,6 +15,11 @@ public abstract class Tag {
 	
 	public abstract byte getId();
 	
+	/**
+	 * Generate a new Tag based on the ID
+	 * @param id the id of the tag
+	 * @return the tag associated with the ID
+	 */
 	protected static Tag createNewTagByType(byte id){
 		switch (id){
 		case 0:
