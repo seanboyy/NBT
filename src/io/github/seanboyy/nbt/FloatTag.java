@@ -6,10 +6,20 @@ import java.io.IOException;
 
 public class FloatTag extends Tag {
 
+	/**
+	 * Data stored in the tag
+	 */
 	private float data;
 	
+	/**
+	 * Create a new empty float tag
+	 */
 	FloatTag(){}
 	
+	/**
+	 * Initialize a new float tag
+	 * @param data value to set the tag to
+	 */
 	public FloatTag(float data){
 		this.data = data;
 	}
@@ -17,7 +27,7 @@ public class FloatTag extends Tag {
 	void write(DataOutput output) throws IOException {
 		output.writeFloat(this.data);
 	}
-
+	
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
 		tracker.read(96L);
 		this.data = input.readFloat();

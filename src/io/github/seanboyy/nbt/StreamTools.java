@@ -16,6 +16,12 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 public class StreamTools {
+	/**
+	 * Read compressed NBT data
+	 * @param is Stream of input data
+	 * @return <code>CompoundTag compoundTag</code>
+	 * @throws IOException
+	 */
 	public static CompoundTag readCompressed(InputStream is) throws IOException{
 		DataInputStream dis = new DataInputStream(new BufferedInputStream(new InflaterInputStream(is)));
 		CompoundTag compoundTag;
@@ -28,6 +34,12 @@ public class StreamTools {
 		return compoundTag;
 	}
 	
+	/**
+	 * Write compressed NBT data
+	 * @param tag Tag to be compressed
+	 * @param os Output Stream to write data to
+	 * @throws IOException
+	 */
 	public static void writeCompressed(CompoundTag tag, OutputStream os) throws IOException{
 		DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(os)));
 		try{
@@ -38,6 +50,12 @@ public class StreamTools {
 		}
 	}
 	
+	/**
+	 * Write the tag to a temp file, and then make the temp file the actual file
+	 * @param tag Tag data to write
+	 * @param file File to replace
+	 * @throws IOException
+	 */
 	public static void safeWrite(CompoundTag tag, File file) throws IOException{
 		File file1 = new File(file.getAbsolutePath() + "_tmp");
 		if(file1.exists()){
@@ -58,10 +76,23 @@ public class StreamTools {
 		}
 	}
 	
+	/**
+	 * Read until the data stream is done
+	 * @param dis Data Stream to read from
+	 * @return <code>CompoundTag tag</code>
+	 * @throws IOException
+	 */
 	public static CompoundTag read(DataInputStream dis) throws IOException{
 		return read(dis, SizeTracker.INFINITE);
 	}
 	
+	/**
+	 * Read the set number of bits from the stream
+	 * @param input Data input to read
+	 * @param tracker keeps track of the size of the tag read
+	 * @return <code>CompoundTag tag</code>
+	 * @throws IOException
+	 */
 	public static CompoundTag read(DataInput input, SizeTracker tracker) throws IOException{
 		Tag tag = read(input, 0, tracker);
 		if(tag instanceof CompoundTag){
@@ -72,10 +103,22 @@ public class StreamTools {
 		}
 	}
 	
+	/**
+	 * Write a tag to the output
+	 * @param tag CompoundTag to write to output
+	 * @param output output to write to
+	 * @throws IOException
+	 */
 	public static void write(CompoundTag tag, DataOutput output) throws IOException{
 		writeTag(tag, output);
 	}
 	
+	/**
+	 * Write tag to output
+	 * @param tag Tag to write
+	 * @param output location to write to
+	 * @throws IOException
+	 */
 	private static void writeTag(Tag tag, DataOutput output) throws IOException{
 		output.writeByte(tag.getId());
 		if(tag.getId() != 0){

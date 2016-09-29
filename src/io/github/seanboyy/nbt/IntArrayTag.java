@@ -24,10 +24,10 @@ public class IntArrayTag extends Tag {
 
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
 		tracker.read(192L);
-		int a = input.readInt();
-		tracker.read((long)(32 * a));
-		this.data = new int[a];
-		for (int b = 0; b < a; b++){
+		int length = input.readInt();
+		tracker.read((long)(32 * length));
+		this.data = new int[length];
+		for (int b = 0; b < length; b++){
 			this.data[b] = input.readInt();
 		}
 	}

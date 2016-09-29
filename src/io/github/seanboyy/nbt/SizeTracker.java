@@ -1,6 +1,9 @@
 package io.github.seanboyy.nbt;
 
 public class SizeTracker {
+	/**
+	 * Create an infinite SizeTracker that never stops
+	 */
 	public static final SizeTracker INFINITE = new SizeTracker(0L){
 		public void read(long bits){}
 	};

@@ -5,14 +5,32 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public abstract class Tag {
-	public static final String[] TAG_TYPES = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
 	
+	/**
+	 * Write data
+	 * @param output
+	 * @throws IOException
+	 */
 	abstract void write(DataOutput output) throws IOException;
 	
+	/**
+	 * Read data
+	 * @param input
+	 * @param depth
+	 * @param tracker
+	 * @throws IOException
+	 */
 	abstract void read(DataInput input, int depth, SizeTracker tracker) throws IOException;
 
+	/**
+	 * Returns a string representation of the tag
+	 */
 	public abstract String toString();
 	
+	/**
+	 * Get the tag's ID byte
+	 * @return id
+	 */
 	public abstract byte getId();
 	
 	/**
@@ -51,6 +69,10 @@ public abstract class Tag {
 		}
 	}
 	
+	/**
+	 * Create a copy of the tag
+	 * @return copy
+	 */
 	public abstract Tag copy();
 	
 	public boolean hasNoTags(){
@@ -71,21 +93,49 @@ public abstract class Tag {
 		return this.getId();
 	}
 	
+	/**
+	 * Get the tag string
+	 * @return string representation of the tag
+	 */
 	protected String getString(){
 		return this.toString();
 	}
 	
 	public abstract static class Primitive extends Tag{
+		/**
+		 * Get the value of the tag as a long
+		 * @return <code>long data</code>
+		 */
 		public abstract long getLong();
 		
+		/**
+		 * Get the value of the tag as an int
+		 * @return <code>int data</code>
+		 */
 		public abstract int getInt();
 		
+		/**
+		 * Get the value of the tag as a short
+		 * @return <code>short data</code>
+		 */
 		public abstract short getShort();
 		
+		/**
+		 * Get the value of the tag as a byte
+		 * @return <code>byte data</code>
+		 */
 		public abstract byte getByte();
 		
+		/**
+		 * Get the value of the tag as a double
+		 * @return <code>double data</code>
+		 */
 		public abstract double getDouble();
 		
+		/**
+		 * Get the value of the tag as a float
+		 * @return <code>float data</code>
+		 */
 		public abstract float getFloat();
 	}
 }

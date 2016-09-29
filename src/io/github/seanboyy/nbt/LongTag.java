@@ -64,7 +64,7 @@ public class LongTag extends Tag {
     {
         return (short)((int)(this.data & 65535L));
     }
-
+    
     public byte getByte()
     {
         return (byte)((int)(this.data & 255L));
