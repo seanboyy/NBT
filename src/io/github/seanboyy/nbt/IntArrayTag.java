@@ -4,21 +4,35 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
-public class IntArrayTag extends Tag {
+public class IntArrayTag extends Base {
 
-	private int[] data;
+	private int[] intArray;
 	
 	IntArrayTag(){}
 	
-	public IntArrayTag(int[] data){
-		this.data = data;
+	public IntArrayTag(int[] intArray){
+		this.intArray = intArray;
+	}
+	
+	public IntArrayTag(List<Number> array) {
+		this(toArray(array));
+	}
+	
+	private static int[] toArray(List<Number> array) {
+		int[] aint = new int[array.size()];
+		for(int a = 0; a < array.size(); ++a) {
+			Number integer = array.get(a);
+			aint[a] = integer == null ? 0 : integer.intValue();
+		}
+		return aint;
 	}
 	
 	void write(DataOutput output) throws IOException {
-		output.writeInt(this.data.length);
-		for(int a = 0; a < this.data.length; a++){
-			output.writeInt(this.data[a]);
+		output.writeInt(this.intArray.length);
+		for(int a = 0; a < this.intArray.length; a++){
+			output.writeInt(this.intArray[a]);
 		}
 	}
 
@@ -26,45 +40,39 @@ public class IntArrayTag extends Tag {
 		tracker.read(192L);
 		int length = input.readInt();
 		tracker.read((long)(32 * length));
-		this.data = new int[length];
+		this.intArray = new int[length];
 		for (int b = 0; b < length; b++){
-			this.data[b] = input.readInt();
+			this.intArray[b] = input.readInt();
 		}
 	}
 
 	public String toString() {
-		String s = "[";
-		for(int a : this.data){
-			s += a + ",";
+		String s = "[I;";
+		for(int a : this.intArray){
+			s += a + ',';
 		}
-		return s + "]"; 
+		return s + ']'; 
 	}
 
 	public byte getId() {
 		return (byte)11;
 	}
 
-	public Tag copy() {
-		int[] aint = new int[this.data.length];
-		System.arraycopy(this.data, 0, aint, 0, this.data.length);
+	public IntArrayTag copy() {
+		int[] aint = new int[this.intArray.length];
+		System.arraycopy(this.intArray, 0, aint, 0, this.intArray.length);
 		return new IntArrayTag(aint);
 	}
 	
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			IntArrayTag intArrayTag = (IntArrayTag)obj;
-			return this.data == intArrayTag.data;
-		}
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && Arrays.equals(this.intArray, ((IntArrayTag)other).intArray);
 	}
 	
 	public int hashCode(){
-		return super.hashCode() ^ Arrays.hashCode(this.data);
+		return super.hashCode() ^ Arrays.hashCode(this.intArray);
 	}
 	
 	public int[] getIntArray(){
-		return this.data;
+		return this.intArray;
 	}
 }

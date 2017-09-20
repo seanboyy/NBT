@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class IntTag extends Tag {
+public class IntTag extends Primitive {
 
 	private int data;
 	
@@ -31,18 +31,12 @@ public class IntTag extends Tag {
 		return (byte)3;
 	}
 
-	public Tag copy() {
+	public IntTag copy() {
 		return new IntTag(this.data);
 	}
 	
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			IntTag intTag = (IntTag)obj;
-			return this.data == intTag.data;
-		}
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && this.data == ((IntTag)other).data;
 	}
 
 	public int hashCode(){

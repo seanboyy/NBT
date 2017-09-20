@@ -94,7 +94,7 @@ public class StreamTools {
 	 * @throws IOException
 	 */
 	public static CompoundTag read(DataInput input, SizeTracker tracker) throws IOException{
-		Tag tag = read(input, 0, tracker);
+		Base tag = read(input, 0, tracker);
 		if(tag instanceof CompoundTag){
 			return (CompoundTag)tag;
 		}
@@ -119,7 +119,7 @@ public class StreamTools {
 	 * @param output location to write to
 	 * @throws IOException
 	 */
-	private static void writeTag(Tag tag, DataOutput output) throws IOException{
+	private static void writeTag(Base tag, DataOutput output) throws IOException{
 		output.writeByte(tag.getId());
 		if(tag.getId() != 0){
 			output.writeUTF("");
@@ -127,7 +127,7 @@ public class StreamTools {
 		}
 	}
 	
-	private static Tag read(DataInput input, int a, SizeTracker tracker) throws IOException{
+	private static Base read(DataInput input, int a, SizeTracker tracker) throws IOException{
 		byte b = input.readByte();
 		tracker.read(8);
 		if(b == 0){
@@ -136,7 +136,7 @@ public class StreamTools {
 		else{
 			SizeTracker.readUTF(tracker, input.readUTF());
 			tracker.read(32);
-			Tag tag = Tag.createNewTagByType(b);
+			Base tag = Base.createNewByType(b);
 			try{
 				tag.read(input, a, tracker);
 				return tag;

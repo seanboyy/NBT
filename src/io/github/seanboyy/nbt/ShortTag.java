@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class ShortTag extends Tag {
+public class ShortTag extends Primitive {
 
 	private short data;
 	
@@ -31,19 +31,12 @@ public class ShortTag extends Tag {
 		return (byte)2;
 	}
 
-	public Tag copy() {
+	public ShortTag copy() {
 		return new ShortTag(this.data);
 	}
 	
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			ShortTag shortTag = (ShortTag)obj;
-			return this.data == shortTag.data;
-		}
-		
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && this.data == ((ShortTag)other).data;
 	}
 	
 	public int hashCode()

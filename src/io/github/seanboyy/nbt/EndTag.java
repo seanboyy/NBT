@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class EndTag extends Tag {
+public class EndTag extends Base {
 
 	void write(DataOutput output) throws IOException {}
 
@@ -20,7 +20,7 @@ public class EndTag extends Tag {
 		return (byte)0;
 	}
 
-	public Tag copy() {
+	public EndTag copy() {
 		return new EndTag();
 	}
 

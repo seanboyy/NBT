@@ -6,29 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListTag extends Tag {
+public class ListTag extends Base implements java.lang.Iterable<Base> {
 
-	private List<Tag> data = new ArrayList<Tag>();
+	private List<Base> tagList = new ArrayList<Base>();
 	private byte tagType = 0;
 	
 	void write(DataOutput output) throws IOException {
-		if(!this.data.isEmpty()){
-			this.tagType = ((Tag)this.data.get(0)).getId();
+		if(!this.tagList.isEmpty()){
+			this.tagType = (this.tagList.get(0)).getId();
 		}
 		else{
 			this.tagType = 0;
 		}
 		output.writeByte(this.tagType);
-		output.writeInt(this.data.size());
-		for(int a = 0; a < this.data.size(); a++){
-			((Tag)this.data.get(a)).write(output);
+		output.writeInt(this.tagList.size());
+		for(int a = 0; a < this.tagList.size(); a++){
+			(this.tagList.get(a)).write(output);
 		}
 	}
 
 	void read(DataInput input, int depth, SizeTracker tracker) throws IOException {
 		tracker.read(296L);
 		if(depth > 512){
-			throw new RuntimeException("Tried to read a list with too high complexity: Depth > 512");
+			throw new RuntimeException("Tried to read a tag with too high complexity: Depth > 512");
 		}
 		else{
 			this.tagType = input.readByte();
@@ -38,11 +38,11 @@ public class ListTag extends Tag {
 			}
 			else{
 				tracker.read(32L * (long)a);
-				this.data = new ArrayList<Tag>();
+				this.tagList = new ArrayList<Base>(a);
 				for(int b = 0; b < a; b++){
-					Tag tag = Tag.createNewTagByType(this.tagType);
+					Base tag = Base.createNewByType(this.tagType);
 					tag.read(input, depth + 1, tracker);
-					this.data.add(tag);
+					this.tagList.add(tag);
 				}
 			}
 		}
@@ -50,11 +50,11 @@ public class ListTag extends Tag {
 
 	public String toString() {
 		StringBuilder sB = new StringBuilder("[");
-		for(int a = 0; a < this.data.size(); a++){
+		for(int a = 0; a < this.tagList.size(); a++){
 			if(a != 0){
 				sB.append(',');
 			}
-			sB.append(a).append(':').append(this.data.get(a));
+			sB.append(a).append(':').append(this.tagList.get(a));
 		}
 		return sB.append(']').toString();
 	}
@@ -63,7 +63,7 @@ public class ListTag extends Tag {
 		return (byte)9;
 	}
 	
-	public void appendTag(Tag tag){
+	public void appendTag(Base tag){
 		if(tag.getId() == 0){
 			System.out.println("WARNING!!!! INVALID EndTag ADDED TO ListTag");
 		}
@@ -75,15 +75,15 @@ public class ListTag extends Tag {
 				System.out.println("WARNING!!!! ADDING MISMATCHED TAG TYPES TO ListTag");
 				return;
 			}
-			this.data.add(tag);
+			this.tagList.add(tag);
 		}
 	}
 
-	public void set(int index, Tag tag){
+	public void set(int index, Base tag){
 		if(tag.getId() == 0){
 			System.out.println("WARNING!!!! INVALID EndTag ADDED TO ListTag");
 		}
-		else if(index >= 0 && index < this.data.size()){
+		else if(index >= 0 && index < this.tagList.size()){
 			if(this.tagType == 0){
 				this.tagType = tag.getId();
 			}
@@ -91,24 +91,24 @@ public class ListTag extends Tag {
 				System.out.println("WARNING!!!! ADDING MISMATCHED TAG TYPES TO ListTag");
 				return;
 			}
-			this.data.set(index, tag);
+			this.tagList.set(index, tag);
 		}
 		else{
 			System.out.println("WARNING!!!! INDEX OUT OF BOUNDS TO SET TAG IN ListTag");
 		}
 	}
 	
-	public Tag removeTag(int a){
-		return (Tag)this.data.remove(a);
+	public Base removeTag(int a){
+		return this.tagList.remove(a);
 	}
 	
 	public boolean hasNoTags(){
-		return this.data.isEmpty();
+		return this.tagList.isEmpty();
 	}
 	
 	public CompoundTag getCompoundTagAt(int index){
-		if(index >= 0 && index < this.data.size()){
-			Tag tag = (Tag)this.data.get(index);
+		if(index >= 0 && index < this.tagList.size()){
+			Base tag = this.tagList.get(index);
 			return tag.getId() == 10 ? (CompoundTag)tag : new CompoundTag();
 		}
 		else{
@@ -116,9 +116,17 @@ public class ListTag extends Tag {
 		}
 	}
 	
+	public int getIntAt(int index) {
+		if(index >= 0 && index < this.tagList.size()) {
+			Base tag = this.tagList.get(index);
+			return tag.getId() == 3 ? ((IntTag)tag).getInt() : 0;
+		}
+		return 0;
+	}
+	
 	public int[] getIntArrayAt(int index){
-		if(index >= 0 && index < this.data.size()){
-			Tag tag = (Tag)this.data.get(index);
+		if(index >= 0 && index < this.tagList.size()){
+			Base tag = this.tagList.get(index);
 			return tag.getId() == 11 ? ((IntArrayTag)tag).getIntArray() : new int[0];
 		}
 		else{
@@ -127,8 +135,8 @@ public class ListTag extends Tag {
 	}
 	
 	public double getDoubleAt(int index){
-		if(index >= 0 && index < this.data.size()){
-			Tag tag = (Tag)this.data.get(index);
+		if(index >= 0 && index < this.tagList.size()){
+			Base tag = this.tagList.get(index);
 			return tag.getId() == 6 ? ((DoubleTag)tag).getDouble() : 0.0D; 
 		}
 		else{
@@ -137,18 +145,16 @@ public class ListTag extends Tag {
 	}
 	
 	public float getFloatAt(int index){
-		if(index >= 0 && index < this.data.size()){
-			Tag tag = (Tag)this.data.get(index);
+		if(index >= 0 && index < this.tagList.size()){
+			Base tag = this.tagList.get(index);
 			return tag.getId() == 5 ? ((FloatTag)tag).getFloat() : 0.0F;
 		}
-		else{
-			return 0.0F;
-		}
+		return 0.0F;
 	}
 	
 	public String getStringAt(int index){
-		if(index >= 0 && index < this.data.size()){
-			Tag tag = (Tag)this.data.get(index);
+		if(index >= 0 && index < this.tagList.size()){
+			Base tag = this.tagList.get(index);
 			return tag.getId() == 8 ? tag.getString() : tag.toString();
 		}
 		else{
@@ -157,19 +163,19 @@ public class ListTag extends Tag {
 	}
 	
 	public int tagCount(){
-		return this.data.size();
+		return this.tagList.size();
 	}
 	
-	public Tag get(int index){
-		return (Tag)(index >= 0 && index < this.data.size() ? (Tag)this.data.get(index) : new EndTag());
+	public Base get(int index){
+		return (Base)(index >= 0 && index < this.tagList.size() ? (Base)this.tagList.get(index) : new EndTag());
 	}
 	
-	public Tag copy() {
+	public ListTag copy() {
 		ListTag listTag = new ListTag();
 		listTag.tagType = this.tagType;
-		for(Tag tag : this.data){
-			Tag tag1 = tag.copy();
-			listTag.data.add(tag1);
+		for(Base tag : this.tagList){
+			Base tag1 = tag.copy();
+			listTag.tagList.add(tag1);
 		}
 		return listTag;
 	}
@@ -178,17 +184,22 @@ public class ListTag extends Tag {
 		if(super.equals(obj)){
 			ListTag listTag = (ListTag)obj;
 			if(this.tagType == listTag.tagType){
-				return this.data.equals(listTag.data);
+				return this.tagList.equals(listTag.tagList);
 			}
 		}
 		return false;
 	}
 
 	public int hashCode(){
-		return super.hashCode() ^ this.data.hashCode();
+		return super.hashCode() ^ this.tagList.hashCode();
 	}
 	
 	public int getTagType(){
 		return this.tagType;
+	}
+	
+	@Override
+	public java.util.Iterator<Base> iterator(){
+		return tagList.iterator();
 	}
 }

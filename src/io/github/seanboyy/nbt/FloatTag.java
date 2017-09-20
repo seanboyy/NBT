@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class FloatTag extends Tag {
+public class FloatTag extends Primitive {
 
 	/**
 	 * Data stored in the tag
@@ -34,25 +34,19 @@ public class FloatTag extends Tag {
 	}
 
 	public String toString() {
-		return "" + this.data + "f";
+		return this.data + "f";
 	}
 
 	public byte getId() {
 		return (byte)5;
 	}
 
-	public Tag copy() {
+	public FloatTag copy() {
 		return new FloatTag(this.data);
 	}
 
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			FloatTag floatTag = (FloatTag)obj;
-			return this.data == floatTag.data;
-		}
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && this.data == ((FloatTag)other).data;
 	}
 	
 	public int hashCode(){

@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class ByteTag extends Tag {
+public class ByteTag extends Primitive {
 
 	private byte data;
 	
@@ -33,7 +33,7 @@ public class ByteTag extends Tag {
 		return (byte)1;
 	}
 
-	public Tag copy() {
+	public ByteTag copy() {
 		return new ByteTag(this.data);
 	}
 

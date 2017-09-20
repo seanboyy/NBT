@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class LongTag extends Tag {
+public class LongTag extends Primitive {
 
 	private long data;
 	
@@ -31,18 +31,12 @@ public class LongTag extends Tag {
 		return (byte)4;
 	}
 
-	public Tag copy() {
+	public LongTag copy() {
 		return new LongTag(this.data);
 	}
 	
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			LongTag longTag = (LongTag)obj;
-			return this.data == longTag.data;
-		}
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && this.data == ((LongTag)other).data;
 	}
 	
     public int hashCode()

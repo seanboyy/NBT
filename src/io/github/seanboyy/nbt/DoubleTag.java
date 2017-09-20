@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class DoubleTag extends Tag {
+public class DoubleTag extends Primitive {
 
 	private double data;
 	
@@ -31,18 +31,12 @@ public class DoubleTag extends Tag {
 		return (byte)6;
 	}
 
-	public Tag copy() {
+	public DoubleTag copy() {
 		return new DoubleTag(this.data);
 	}
 	
-	public boolean equals(Object obj){
-		if(super.equals(obj)){
-			DoubleTag doubleTag = (DoubleTag)obj;
-			return this.data == doubleTag.data;
-		}
-		else{
-			return false;
-		}
+	public boolean equals(Object other){
+		return super.equals(other) && this.data == ((DoubleTag)other).data;
 	}
 	
 	public int hashCode(){
@@ -59,11 +53,11 @@ public class DoubleTag extends Tag {
 	}
 	
 	public short getShort(){
-		return (short)Math.floor(this.data);
+		return (short)((int)Math.floor(this.data) & 65535);
 	}
 	
 	public byte getByte(){
-		return (byte)Math.floor(this.data);
+		return (byte)((int)Math.floor(this.data) & 255);
 	}
 	
 	public double getDouble(){

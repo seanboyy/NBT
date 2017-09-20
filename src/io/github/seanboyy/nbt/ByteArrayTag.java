@@ -4,8 +4,9 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
-public class ByteArrayTag extends Tag {
+public class ByteArrayTag extends Base {
 
 	private byte[] data;
 	
@@ -13,6 +14,19 @@ public class ByteArrayTag extends Tag {
 	
 	public ByteArrayTag(byte[] data){
 		this.data = data;
+	}
+
+	public ByteArrayTag(List<Number> data) {
+		this(toArray(data));
+	}
+	
+	private static byte[] toArray(List<Number> data) {
+		byte[] abyte = new byte[data.size()];
+		for(int a = 0; a < data.size(); ++a) {
+			Number obyte = data.get(a);
+			abyte[a] = obyte == null ? 0 : obyte.byteValue();
+		}
+		return abyte;
 	}
 
 	void write(DataOutput output) throws IOException {
@@ -29,14 +43,21 @@ public class ByteArrayTag extends Tag {
 	}
 
 	public String toString() {
-		return "[" + this.data.length + " bytes]";
+		StringBuilder stringBuilder = new StringBuilder("[B;");
+		for(int a = 0; a < this.data.length; ++a) {
+			if(a != 0) {
+				stringBuilder.append(',');
+			}
+			stringBuilder.append((int)this.data[a]).append('B');
+		}
+		return stringBuilder.append(']').toString();
 	}
 
 	public byte getId() {
 		return (byte)7;
 	}
 
-	public Tag copy() {
+	public Base copy() {
 		byte[] abyte = new byte[this.data.length];
 		System.arraycopy(this.data, 0, abyte, 0, this.data.length);
 		return new ByteArrayTag(abyte);

@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class StringTag extends Tag {
+public class StringTag extends Base {
 
 	private String data;
 	
@@ -37,7 +37,7 @@ public class StringTag extends Tag {
 		return (byte)8;
 	}
 
-	public Tag copy() {
+	public StringTag copy() {
 		return new StringTag(this.data);
 	}
 
@@ -61,5 +61,17 @@ public class StringTag extends Tag {
 	
 	public String getString(){
 		return this.data;
+	}
+	
+	public static String quoteAndEscape(String data) {
+		StringBuilder stringBuilder = new StringBuilder("\"");
+		for(int a = 0; a < data.length(); ++a) {
+			char c = data.charAt(a);
+			if(c == '\\' || c == '"') {
+				stringBuilder.append('\\');
+			}
+			stringBuilder.append(c);
+		}
+		return stringBuilder.append('"').toString();
 	}
 }
