@@ -9,7 +9,7 @@ public class FromJSON {
 	private static final Pattern DOUBLE_PATTERN_NOSUFFIX = Pattern.compile("[-+]?(?:[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?", 2);
 	private static final Pattern DOUBLE_PATTERN = Pattern.compile("[-+]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?d", 2);
 	private static final Pattern FLOAT_PATTERN = Pattern.compile("[-+]?(?:[0-9]+[.]?|[0-9]*[.][0-9]+)(?:e[-+]?[0-9]+)?f", 2);
-	private static final Pattern BYTE_PATTERN = Pattern.compile("[-+]?(?0|[1-9][0-9]*)b", 2);
+	private static final Pattern BYTE_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)b", 2);
 	private static final Pattern LONG_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)l", 2);
 	private static final Pattern SHORT_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)s", 2);
 	private static final Pattern INT_PATTERN = Pattern.compile("[-+]?(?:0|[1-9][0-9]*)");
@@ -21,7 +21,6 @@ public class FromJSON {
 		return (new FromJSON(jsonString)).readSingleStruct();
 	}
 	
-	@VisibleForTesting
 	CompoundTag readSingleStruct() throws TagException{
 		CompoundTag tag = this.readStruct();
 		this.skipWhitespace();
@@ -34,7 +33,6 @@ public class FromJSON {
 		}
 	}
 	
-	@VisibleForTesting
 	FromJSON(String stringIn){
 		this.string = stringIn;
 	}
