@@ -11,8 +11,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import com.sun.istack.internal.Nullable;
-
 public class CompoundTag extends Base {
 	
 	private static  final Pattern SIMPLE_VALUE = Pattern.compile("[A-Za-z0-9._+-]+");
@@ -76,7 +74,6 @@ public class CompoundTag extends Base {
 		this.setLong(key + "Least", value.getLeastSignificantBits());
 	}
 	
-	@Nullable
 	public UUID getUniqueId(String key) {
 		return new UUID(this.getLong(key + "Most"), this.getLong(key + "Least"));
 	}
@@ -196,7 +193,7 @@ public class CompoundTag extends Base {
 		try{
 			return !this.hasKey(key, 7) ? new byte[0] : ((ByteArrayTag)this.tagMap.get(key)).getByteArray();
 		}catch(ClassCastException e){
-			System.out.println("CRITICAL ERROR IN READING BYTE ARRAY TAG");
+			System.err.println("CRITICAL ERROR IN READING BYTE ARRAY TAG");
 			e.printStackTrace();
 			return null;
 		}
@@ -206,7 +203,7 @@ public class CompoundTag extends Base {
 		try{
 			return !this.hasKey(key, 11) ? new int[0] : ((IntArrayTag)this.tagMap.get(key)).getIntArray();
 		}catch(ClassCastException e){
-			System.out.println("CRITICAL ERROR IN READING INT ARRAY TAG");
+			System.err.println("CRITICAL ERROR IN READING INT ARRAY TAG");
 			e.printStackTrace();
 			return null;
 		}
@@ -216,7 +213,7 @@ public class CompoundTag extends Base {
 		try{
 			return !this.hasKey(key, 10) ? new CompoundTag() : (CompoundTag)this.tagMap.get(key);
 		}catch(ClassCastException e){
-			System.out.println("CRITICAL ERROR IN READING COMPOUND TAG");
+			System.err.println("CRITICAL ERROR IN READING COMPOUND TAG");
 			e.printStackTrace();
 		}
 		return new CompoundTag();
@@ -232,7 +229,7 @@ public class CompoundTag extends Base {
 				return listTag.tagCount() > 0 && listTag.getTagType() != type ? new ListTag() : listTag;
 			}
 		}catch(ClassCastException e){
-			System.out.println("CRITICAL ERROR IN READING LIST TAG");
+			System.err.println("CRITICAL ERROR IN READING LIST TAG");
 			e.printStackTrace();
 		}
 		return new ListTag();
@@ -304,7 +301,7 @@ public class CompoundTag extends Base {
 			tag.read(input,  depth, tracker);
 			return tag;
 		}catch(IOException e){
-			System.out.println("CRITICAL ERROR READING NBT DATA");
+			System.err.println("CRITICAL ERROR READING NBT DATA");
 			e.printStackTrace();
 			return null;
 		}
